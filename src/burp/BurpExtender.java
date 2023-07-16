@@ -5,17 +5,16 @@
  */
 package burp;
 
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  *
@@ -38,7 +37,7 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
     {
         List<JMenuItem> menus = new ArrayList<>();
         
-        IHttpRequestResponse[] messages = iContextMenuInvocation.getSelectedMessages();
+        //IHttpRequestResponse[] messages = iContextMenuInvocation.getSelectedMessages();
         JMenuItem menu = new JMenuItem("Export Cookies");
         MenuItemListener listener = new MenuItemListener();
         menu.addActionListener(listener);
@@ -59,10 +58,26 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
     // Currently, requires a Documents folder in the users home folder.
     String GetSavePath()
     {
-        Path currentPath = Paths.get(System.getProperty("user.dir"));
-        String filePath = Paths.get(currentPath.toString(), "Documents", "cookieReport.csv").toString();
+        
+        String filePath = "";
+        JFrame frame = new JFrame();
+        frame.setSize(200, 200);
+        frame.setVisible(true);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int option = chooser.showOpenDialog(frame);
+        if(option == JFileChooser.APPROVE_OPTION){
+            System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName()); 
+            filePath = Paths.get(chooser.getSelectedFile().getAbsolutePath(),"cookieReport.csv").toString();
+        }else{  
+            System.out.println("You canceled."); 
+        }
 
+        //Path currentPath = Paths.get(System.getProperty("user.dir"));
+        //String filePath = Paths.get(currentPath.toString(), "Documents", "cookieReport.csv").toString();
+        frame.dispose();
         System.out.println("The Path: " + filePath);
+        
         return filePath;
     }
     
@@ -123,6 +138,8 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
                     }
                 }
             }
+        }else{
+            System.out.println("No messages in scope");
         }
 
         if(cookies.size() > 0)
@@ -137,6 +154,7 @@ public class BurpExtender implements IBurpExtender, IContextMenuFactory
                 System.out.println(e.toString());
             }
         }
+        System.out.println("Finished Analysis");
     }
     
 
