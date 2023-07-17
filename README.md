@@ -5,6 +5,9 @@ This project is just a sample to show how a simple burp extension can be created
 
 This tool is very basic and I am sure there are better ways to extract this information. 
 
+## Disclaimer
+This is an example project only and is not meant for production use. USE AT YOUR OWN RISK!!.  
+
 ## Use
 Build the Jar file and then in Burp open up the Extender tab. Next, select the Add button and select your new JAR file. Open the Target Tab and right click on a request for your site. Make sure the site is in scope. Select Export cookies menu item and it should create the CSV file of your cookies. The file location is chosen when you run the extension through a file picker. 
 
